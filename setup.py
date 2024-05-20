@@ -5,6 +5,8 @@ requirements = [
     'torch>=2.3.0',
     'triton>=2.3.0',
     'numpy',
+    'matplotlib>=3.9.0',
+    'pandas>=2.2.2',
     
 ]
 

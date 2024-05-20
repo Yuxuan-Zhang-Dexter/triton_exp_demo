@@ -99,4 +99,4 @@ if __name__ == "__main__":
     print(output_triton)
     print(f'The maximum difference between torch and triton is '
       f'{torch.max(torch.abs(output_torch - output_triton))}')
-    benchmark.run(print_data=True, show_plots=True)
+    benchmark.run(print_data=True, show_plots=True, save_path='./fig/')
