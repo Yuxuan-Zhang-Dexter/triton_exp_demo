@@ -46,7 +46,7 @@ def add(x: torch.Tensor, y: torch.Tensor):
 
     # - # The SPMD launch grid denotes the number of kernel instances that run in parallel.
     # the returned value is the number of blocks
-    grid = lambda meta: (triton.cdiv(n_elements, meta['BLOCK_SIZE']))
+    grid = lambda meta: (triton.cdiv(n_elements, meta['BLOCK_SIZE']),)
 
     # NOTE:
     #  - Each torch.tensor object is implicitly converted into a pointer to its first element.
