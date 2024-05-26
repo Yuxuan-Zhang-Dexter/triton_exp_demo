@@ -137,4 +137,4 @@ if __name__ == "__main__":
     y_triton = softmax(x)
     y_torch = torch.softmax(x, axis = 1)
     assert torch.allclose(y_triton, y_torch), (y_triton, y_torch)
-    benchmark.run(show_plots=True, print_data=True)
+    benchmark.run(show_plots=True, print_data=True, save_path='./fig/')
