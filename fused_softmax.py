@@ -40,7 +40,7 @@ def softmax_kernel(output_ptr, input_ptr, input_row_stride, output_row_stride, n
 
     # - The block size is the next power of two greater than n_cols
     # - col_offsets help point to row elements in the block
-    col_offsets = tl.range(0, BLOCK_SIZE)
+    col_offsets = tl.arange(0, BLOCK_SIZE)
     input_ptrs = row_start_ptr + col_offsets
 
     # - load the row into SRAM and mask elements with float -inf beyond n_cols

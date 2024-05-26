@@ -1,0 +1,8 @@
+README.md
+setup.py
+dependency_installer.egg-info/PKG-INFO
+dependency_installer.egg-info/SOURCES.txt
+dependency_installer.egg-info/dependency_links.txt
+dependency_installer.egg-info/not-zip-safe
+dependency_installer.egg-info/requires.txt
+dependency_installer.egg-info/top_level.txt
