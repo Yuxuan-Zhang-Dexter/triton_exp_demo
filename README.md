@@ -3,7 +3,7 @@ We provide instructions to run these codes in this section
 ## Local User
 ### Dependency Installation
 ```
-conda create -n triton_exp python=3.8
+conda create -n triton_exp python=3.12
 conda activate triton_exp
 pip install --editable .
 ```
