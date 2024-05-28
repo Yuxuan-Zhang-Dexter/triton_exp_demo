@@ -215,6 +215,30 @@ def matmul(a, b, activation =""):
 
 # -----------------------------------------------------------
 ### - define benchmark functions
+TORCH_HAS_FP8 = hasattr(torch, "float8_e5m2")
+ref_lib = 'cuBLAS' if is_cuda() else 'rocBLAS'
+
+configs = []
+for fp8_inputs in [False, True]:
+    if fp8_inputs and (not TORCH_HAS_FP8 or not is_cuda()):
+        continue
+    configs.append(
+        triton.testing.Benchmark(
+            x_names=["M", "N", "K"],  # Argument names to use as an x-axis for the plot
+            x_vals=[128 * i for i in range(2, 33)],  # Different possible values for `x_name`
+            line_arg="provider",  # Argument name whose value corresponds to a different line in the plot
+            # Possible values for `line_arg`
+            # Don't compare to cublas for fp8 cases as torch.matmul doesn't support fp8 at the moment.
+            line_vals=["triton"] if fp8_inputs else [ref_lib.lower(), "triton"],  # Label name for the lines
+            line_names=["Triton"] if fp8_inputs else [ref_lib, "Triton"],  # Line styles
+            styles=[("green", "-"), ("blue", "-")],
+            ylabel="TFLOPS",  # Label name for the y-axis
+            plot_name="matmul-performance-" +
+            ("fp16" if not fp8_inputs else "fp8"),  # Name for the plot, used also as a file name for saving the plot.
+            args={"fp8_inputs": fp8_inputs},
+        ))
+
+
 @triton.testing.perf_report(configs)
 def benchmark(M, N, K, provider, fp8_inputs):
     a = torch.randn((M, K), device='cuda', dtype=torch.float16)
@@ -267,31 +291,8 @@ if __name__ == "__main__":
             print("✅ Triton and Torch match")
         else:
             print("❌ Triton and Torch differ")
-
-        ### - Benchmark Test
-        ref_lib = 'cuBLAS' if is_cuda() else 'rocBLAS'
-
-        configs = []
-        for fp8_inputs in [False, True]:
-            if fp8_inputs and (not TORCH_HAS_FP8 or not is_cuda()):
-                continue
-            configs.append(
-                triton.testing.Benchmark(
-                    x_names=["M", "N", "K"],  # Argument names to use as an x-axis for the plot
-                    x_vals=[128 * i for i in range(2, 33)],  # Different possible values for `x_name`
-                    line_arg="provider",  # Argument name whose value corresponds to a different line in the plot
-                    # Possible values for `line_arg`
-                    # Don't compare to cublas for fp8 cases as torch.matmul doesn't support fp8 at the moment.
-                    line_vals=["triton"] if fp8_inputs else [ref_lib.lower(), "triton"],  # Label name for the lines
-                    line_names=["Triton"] if fp8_inputs else [ref_lib, "Triton"],  # Line styles
-                    styles=[("green", "-"), ("blue", "-")],
-                    ylabel="TFLOPS",  # Label name for the y-axis
-                    plot_name="matmul-performance-" +
-                    ("fp16" if not fp8_inputs else "fp8"),  # Name for the plot, used also as a file name for saving the plot.
-                    args={"fp8_inputs": fp8_inputs},
-                ))
         
-        benchmark.run(show_plots=True, print_data=True)
+        benchmark.run(show_plots=True, print_data=True, save_path='./fig/')
 
     
 
