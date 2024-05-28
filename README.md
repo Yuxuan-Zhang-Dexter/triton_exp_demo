@@ -91,8 +91,8 @@ softmax-performance:
 96  12544.0  510.129293      277.818030   181.304419
 97  12672.0  510.178193      277.030908   181.311878
 
-![softmax-performance](./fig/softmax-performance.png)
 ```
+![softmax-performance](./fig/softmax-performance.png)
 
 ### Matrix Multiplication
 ```
