@@ -273,10 +273,11 @@ if __name__ == "__main__":
         print("✅ Triton and Torch match")
     else:
         print("❌ Triton and Torch differ")
+        
         # Compute absolute and relative differences
         abs_diff = torch.abs(triton_output - torch_output)
         rel_diff = abs_diff / torch.abs(torch_output)
-    
+        
         # Get the maximum differences
         max_abs_diff = torch.max(abs_diff).item()
         max_rel_diff = torch.max(rel_diff).item()
@@ -285,13 +286,21 @@ if __name__ == "__main__":
         mismatched = torch.nonzero(abs_diff > (1e-2 + rtol * torch.abs(torch_output)), as_tuple=True)
         mismatched_elements = mismatched[0].tolist()
 
+        # Collect mismatched elements into arrays
+        triton_mismatch = triton_output.flatten()[mismatched_elements].cpu().numpy()
+        torch_mismatch = torch_output.flatten()[mismatched_elements].cpu().numpy()
+
+        # Calculate the percentage of mismatched elements
+        total_elements = torch_output.numel()
+        mismatch_percentage = (len(mismatched_elements) / total_elements) * 100
+
         # Print mismatched elements details
         print(f"Mismatched elements: {len(mismatched_elements)}")
+        print(f"Percentage of mismatched elements: {mismatch_percentage:.2f}%")
         print(f"Max absolute difference: {max_abs_diff}")
         print(f"Max relative difference: {max_rel_diff}")
-        print("Mismatched elements details:")
-        for idx in mismatched_elements:
-            print(f"Index: {idx}, Triton output: {triton_output.flatten()[idx].item()}, Torch output: {torch_output.flatten()[idx].item()}, Absolute difference: {abs_diff.flatten()[idx].item()}, Relative difference: {rel_diff.flatten()[idx].item()}")
+        print("Triton mismatched elements:", triton_mismatch)
+        print("Torch mismatched elements:", torch_mismatch)
 
     TORCH_HAS_FP8 = hasattr(torch, "float8_e5m2")
     if TORCH_HAS_FP8 and is_cuda():
@@ -311,11 +320,9 @@ if __name__ == "__main__":
         else:
             print("❌ Triton and Torch differ")
             # Compute absolute and relative differences
-
-            # Compute absolute and relative differences
             abs_diff = torch.abs(triton_output - torch_output)
             rel_diff = abs_diff / torch.abs(torch_output)
-    
+
             # Get the maximum differences
             max_abs_diff = torch.max(abs_diff).item()
             max_rel_diff = torch.max(rel_diff).item()
