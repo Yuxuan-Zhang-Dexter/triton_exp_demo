@@ -175,6 +175,8 @@ def matmul_kernel(
         a_ptrs += BLOCK_SIZE_K * stride_ak
         b_ptrs += BLOCK_SIZE_K * stride_bk
 
+    # - You can fuse arbitrary activation functions here
+    # - while the accumulator is still in FP32!
     if ACTIVATION == "leaky_relu":
         accumulator = leaky_relu(accumulator)
     c = accumulator.to(tl.float16)
@@ -258,7 +260,7 @@ def benchmark(M, N, K, provider, fp8_inputs):
 
 if __name__ == "__main__":
     ### - Unit Test
-    torch.manual_seed(0)
+    torch.manual_seed(13)
     a = torch.randn((512, 512), device='cuda', dtype=torch.float16)
     b = torch.randn((512, 512), device='cuda', dtype=torch.float16)
     triton_output = matmul(a, b)
