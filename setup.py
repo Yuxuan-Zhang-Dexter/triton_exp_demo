@@ -1,4 +1,5 @@
 from setuptools import setup
+from check_cuda import is_cuda
 
 # List of requirements
 requirements = [
@@ -21,3 +22,5 @@ def setup_package():
 
 if __name__ == '__main__':
     setup_package()
+    is_cuda()
+

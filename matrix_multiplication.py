@@ -175,9 +175,9 @@ def matmul_kernel(
         a_ptrs += BLOCK_SIZE_K * stride_ak
         b_ptrs += BLOCK_SIZE_K * stride_bk
 
-        if ACTIVATION == "leaky_relu":
-            accumulator = leaky_relu(accumulator)
-        c = accumulator.to(tl.float16)
+    if ACTIVATION == "leaky_relu":
+        accumulator = leaky_relu(accumulator)
+    c = accumulator.to(tl.float16)
 
     # -----------------------------------------------------------
     # - Write back the block of the output matrix C with masks.
