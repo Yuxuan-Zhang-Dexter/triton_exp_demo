@@ -3,12 +3,19 @@ import torch
 import triton
 import triton.language as tl
 
+
 def is_cuda():
-    return triton.runtime.driver.active.get_current_target().backend == "cuda"
+    return torch.cuda.is_available()
 
 def is_hip_mi200():
-    target = triton.runtime.driver.active.get_current_target()
-    return target.backend == 'hip' and target.arch == 'gfx90a'
+    if torch.cuda.is_available():
+        for i in range(torch.cuda.device_count()):
+            device_name = torch.cuda.get_device_name(i)
+            # Check if the device name matches an AMD MI200 series
+            if "MI200" in device_name:  # Example check; replace with actual device name substring
+                return True
+    return False
+
 
 def get_cuda_autotune_config():
     return [
@@ -67,11 +74,12 @@ def get_hip_autotune_config():
     ]
 
 def get_autotune_config():
-    target = triton.runtime.driver.active.get_current_target()
-    if target.backend == 'cuda':
+    if is_cuda():
         return get_cuda_autotune_config()
-    else:
+    elif is_hip_mi200():
         return get_hip_autotune_config()
+    else:
+        raise RuntimeError("No compatible GPU found for autotuning.")
 
 
 # - Build matmul_kernel
