@@ -348,6 +348,7 @@ if __name__ == "__main__":
             print(f"Max relative difference: {max_rel_diff}")
             print("Triton mismatched elements:", triton_mismatch)
             print("Torch mismatched elements:", torch_mismatch)
+    benchmark.run(show_plots=True, print_data=True, save_path='./fig/')
 
     
 
