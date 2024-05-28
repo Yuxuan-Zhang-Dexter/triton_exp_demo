@@ -260,7 +260,7 @@ def benchmark(M, N, K, provider, fp8_inputs):
 
 if __name__ == "__main__":
     ### - Unit Test
-    torch.manual_seed(13)
+    torch.manual_seed(0)
     a = torch.randn((512, 512), device='cuda', dtype=torch.float16)
     b = torch.randn((512, 512), device='cuda', dtype=torch.float16)
     triton_output = matmul(a, b)
