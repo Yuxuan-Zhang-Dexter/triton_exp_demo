@@ -282,6 +282,7 @@ if __name__ == "__main__":
                     ("fp16" if not fp8_inputs else "fp8"),  # Name for the plot, used also as a file name for saving the plot.
                     args={"fp8_inputs": fp8_inputs},
                 ))
+        
         benchmark.run(show_plots=True, print_data=True)
 
     
