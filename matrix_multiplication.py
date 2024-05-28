@@ -273,6 +273,8 @@ if __name__ == "__main__":
         print("✅ Triton and Torch match")
     else:
         print("❌ Triton and Torch differ")
+        max_abs_diff = torch.max(torch.abs(triton_output - torch_output)).item()
+        print(f"Maximum absolute difference: {max_abs_diff}")
 
     TORCH_HAS_FP8 = hasattr(torch, "float8_e5m2")
     if TORCH_HAS_FP8 and is_cuda():
