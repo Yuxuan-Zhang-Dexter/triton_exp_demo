@@ -2,8 +2,10 @@ Metadata-Version: 2.1
 Name: dependency-installer
 Version: 0.1.0
 Summary: Install project dependencies
+Requires-Dist: setuptools
 Requires-Dist: torch>=2.3.0
 Requires-Dist: triton>=2.3.0
 Requires-Dist: numpy
 Requires-Dist: matplotlib>=3.9.0
 Requires-Dist: pandas>=2.2.2
+Requires-Dist: tabulate
