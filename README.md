@@ -239,9 +239,9 @@ matmul-performance-fp8:
 ```
 !!!: GPU 2080ti architecture causes precision loss from fp32 to fp16 so fp16 torch tensors are mismatched between naive one and triton one.
 
-![matmul-performance](./fig/matmul-performance-fp16.png)
+![matmul-performance](./fig/2080_matrix/matmul-performance-fp16.png)
 
-![matmul-performance](./fig/matmul-performance-fp8.png)
+![matmul-performance](./fig/2080_matrix/matmul-performance-fp8.png)
 
 ### Drop Out
 ```
